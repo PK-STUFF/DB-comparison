@@ -13,12 +13,20 @@ update_test_data = {"string": "abcd", "number": 5, "boolean": False}
 for controller in controllers:
 	print("Testing", controller.name, "...")
 
-	# TODO: Generate random IDs and repeat tests different number of times
-	# TODO: Measure time taken by each operation
-	# TODO: Find a way to test all operations when relations are affected
-	controller.create("test", 0, create_test_data)
-	controller.read("test", 0)
-	controller.update("test", 0, update_test_data)
-	controller.delete("test", 0)
+	for n_tests in (10, 100, 1000):
+		# TODO: Measure time taken by n of each type of operation
+		# TODO: Find a way to test all operations when relations are affected
+
+		for i in range(n_tests):
+			controller.create("test", i, create_test_data)
+
+		for i in range(n_tests):
+			controller.read("test", i)
+
+		for i in range(n_tests):
+			controller.update("test", i, update_test_data)
+
+		for i in range(n_tests):
+			controller.delete("test", i)
 
 	print(controller.name, "testing complete")
