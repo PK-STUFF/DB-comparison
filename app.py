@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from gen_test_data import gen_test_data
 from NanoController import NanoController
 
 controllers = [
@@ -7,26 +8,50 @@ controllers = [
 	# TODO: Add OracleController to this list
 ]
 
-create_test_data = {"string": "abc", "number": 42, "boolean": True}
-update_test_data = {"string": "abcd", "number": 5, "boolean": False}
+if __name__ == "__main__":
+	n_tests = 100
 
-for controller in controllers:
-	print("Testing", controller.name, "...")
+	print("Generating test data...")
+	(cr_authors, cr_books, up_authors, up_books) = gen_test_data(n_tests)
+	print("Test data generated")
 
-	for n_tests in (10, 100, 1000):
+	# Start tests
+	for controller in controllers:
+		print("Testing", controller.name, "...")
+
 		# TODO: Measure time taken by n of each type of operation
 		# TODO: Find a way to test all operations when relations are affected
 
+		# 1st test checks creating author records ( no references/relations  )
 		for i in range(n_tests):
-			controller.create("test", i, create_test_data)
+			controller.create_author(i, cr_authors[i])
 
+		# 2nd test checks creating book records   ( yes references/relations )
 		for i in range(n_tests):
-			controller.read("test", i)
+			controller.create_book(i, cr_books[i])
 
+		# 3rd test checks reading  author records ( no references/relations  )
 		for i in range(n_tests):
-			controller.update("test", i, update_test_data)
+			controller.read_author(i)
 
+		# 4th test checks reading  book records   ( yes references/relations )
 		for i in range(n_tests):
-			controller.delete("test", i)
+			controller.read_book(i)
 
-	print(controller.name, "testing complete")
+		# 5th test checks updating author records ( no references/relations  )
+		for i in range(n_tests):
+			controller.update_author(i, up_authors[i])
+
+		# 6th test checks updating book records   ( yes references/relations )
+		for i in range(n_tests):
+			controller.update_book(i, up_books[i])
+
+		# 7th test checks deleting author records ( no references/relations  )
+		for i in range(n_tests):
+			controller.delete_author(i)
+
+		# 8th test checks deleting book records   ( yes references/relations )
+		for i in range(n_tests):
+			controller.delete_book(i)
+
+		print(controller.name, "testing complete")
