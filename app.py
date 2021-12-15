@@ -4,10 +4,11 @@ from timeit import default_timer as timer
 
 from gen_test_data import gen_test_data
 from NanoController import NanoController
+from OracleController import OracleController
 
 controllers = [
-	NanoController("http://127.0.0.1:3000")
-	# TODO: Add OracleController to this list
+	NanoController("http://127.0.0.1:3000"),
+	OracleController("localhost:1521/ztbd", r"C:\instantclient_21_3")
 ]
 
 if __name__ == "__main__":
