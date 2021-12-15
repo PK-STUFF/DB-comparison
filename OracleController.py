@@ -7,7 +7,6 @@ class OracleController():
 		# Init connection, etc.
 		self.addr = addr
 		self.ic_path = ic_path
-		self.conn = self.connect()
 
 	def connect(self):
 		cx_Oracle.init_oracle_client(lib_dir=self.ic_path)
@@ -20,32 +19,123 @@ class OracleController():
 
 	def create_author(self, identifier, data):
 		# Returns True if record was created, otherwise False
-		return True
+		cmd=f"insert into author(id_aut, fname, lname, country) values( AUTHOR_SEQ.nextval, '{data['fname']}', '{data['lname']}', '{data['country']}') returning id_aut into :id_aut"
+		
+		conn = self.connect()
+		c = conn.cursor()
+		id_aut_wrap = c.var(cx_Oracle.NUMBER)
+		sql_params = { "id_aut" : id_aut_wrap }
+		c.execute(cmd, sql_params)
+		conn.commit()
+
+		id_aut=id_aut_wrap.getvalue()
+		if id_aut:
+			return True
+		else:
+			return False
 
 	def create_book(self, identifier, data):
 		# Returns True if record was created, otherwise False
-		return True
+		cmd=f"insert into book(id_book, title, price, id_aut, pages, date_pub) values( BOOK_SEQ.nextval, '{data['title']}', {data['price']}, {data['id_aut']}, {data['pages']}, '{data['date_pub']}') returning id_book into :id_book"
+		
+		conn = self.connect()
+		c = conn.cursor()
+		id_book_wrap = c.var(cx_Oracle.NUMBER)
+		sql_params = { "id_aut" : id_book_wrap }
+		c.execute(cmd, sql_params)
+		conn.commit()
+
+		id_book=id_book_wrap.getvalue()
+		if id_book:
+			return True
+		else:
+			return False
 
 	def read_author(self, identifier):
-		# Returns data read from database as parsed JSON
+		cmd = f"select * from author where id_aut ={identifier}"
+
+		conn = self.connect()
+		c = conn.cursor()
+		c = conn.cursor()
+		c.execute(cmd)
+
 		return True
 
 	def read_book(self, identifier):
-		# Returns data read from database as parsed JSON
+		cmd = f"select * from author where id_aut ={identifier}"
+
+		conn = self.connect()
+		c = conn.cursor()
+		c = conn.cursor()
+		c.execute(cmd)
+				
 		return True
 
 	def update_author(self, identifier, data):
 		# Returns True if record was updated, otherwise False
-		return True
+		cmd=f"update author set fname='{data['fname']}', lname='{data['lname']}', country='{data['country']}' where id_aut={identifier} returning id_aut into :id_aut"
+		
+		conn = self.connect()
+		c = conn.cursor()
+		id_aut_wrap = c.var(cx_Oracle.NUMBER)
+		sql_params = { "id_aut" : id_aut_wrap }
+		c.execute(cmd, sql_params)
+		conn.commit()
+
+		id_aut=id_aut_wrap.getvalue()
+		if id_aut:
+			return True
+		else:
+			return False
 
 	def update_book(self, identifier, data):
 		# Returns True if record was updated, otherwise False
-		return True
+		cmd=f"update book set title='{data['title']}', price={data['price']}, id_aut={data['id_aut']}, pages={data['pages']}, date_pub='{data['date_pub']}' where id_book={identifier} returning id_book into :id_book"
+		
+		conn = self.connect()
+		c = conn.cursor()
+		id_book_wrap = c.var(cx_Oracle.NUMBER)
+		sql_params = { "id_book" : id_book_wrap }
+		c.execute(cmd, sql_params)
+		conn.commit()
+
+		id_book=id_book_wrap.getvalue()
+		if id_book:
+			return True
+		else:
+			return False
 
 	def delete_author(self, identifier):
 		# Returns True if record was deleted, otherwise False
-		return True
+		cmd=f"delete from author where id_aut={identifier} returning id_aut into :id_aut"
+		
+		conn = self.connect()
+		c = conn.cursor()
+		id_aut_wrap = c.var(cx_Oracle.NUMBER)
+		sql_params = { "id_aut" : id_aut_wrap }
+		c.execute(cmd, sql_params)
+		conn.commit()
+
+		id_aut=id_aut_wrap.getvalue()
+		if id_aut:
+			return True
+		else:
+			return False
 
 	def delete_book(self, identifier):
 		# Returns True if record was deleted, otherwise False
-		return True
+		cmd=f"delete from book where id_book={identifier} returning id_book into :id_book"
+		
+		conn = self.connect()
+		c = conn.cursor()
+		id_book_wrap = c.var(cx_Oracle.NUMBER)
+		sql_params = { "id_book" : id_book_wrap }
+		c.execute(cmd, sql_params)
+		conn.commit()
+
+		id_book=id_book_wrap.getvalue()
+		if id_book:
+			return True
+		else:
+			return False
+
