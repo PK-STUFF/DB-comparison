@@ -1,10 +1,21 @@
+import cx_Oracle
+
 class OracleController():
 	name = "OracleDB"
 
-	def __init__(self, addr):
+	def __init__(self, addr, ic_path):
 		# Init connection, etc.
-		raise NotImplementedError
+		self.addr = addr
+		self.ic_path = ic_path
+		self.conn = self.connect()
 
+	def connect(self):
+		cx_Oracle.init_oracle_client(lib_dir=self.ic_path)
+		conn = cx_Oracle.connect(user="SYS", 
+								 password="adminztbd",
+                               	 dsn=self.addr,
+                                 mode=cx_Oracle.SYSDBA)
+		return conn	
 
 
 	def create_author(self, identifier, data):
