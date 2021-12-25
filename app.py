@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from dotenv import dotenv_values
 from timeit import default_timer as timer
 
 from gen_test_data import gen_test_data
@@ -10,8 +11,8 @@ controllers = [
 	# TODO: Add OracleController to this list
 ]
 
-if __name__ == "__main__":
-	n_tests = 100
+
+def run_with_parameters(n_tests):
 	time_results = []
 
 	print("Generating test data...")
@@ -92,7 +93,7 @@ if __name__ == "__main__":
 
 	print("All controller tests complete")
 	for i, _ in enumerate(controllers):
-		print(f"\nController #{i} results:")
+		print(f"\n{controllers[i].name} results:")
 		print("Test #1\t| Test #2\t| Test #3\t| Test #4\t| Test #5\t| Test #6\t| Test #7\t| Test #8\t|")
 		for result in time_results[0]:
 			result *= 1000
@@ -100,3 +101,8 @@ if __name__ == "__main__":
 
 	print("")
 
+
+# Read .env and run the tests
+if __name__ == "__main__":
+	config = dotenv_values(".env")
+	run_with_parameters(int(config["N_TESTS"]))
