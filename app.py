@@ -12,7 +12,13 @@ controllers = [
 ]
 
 
-def run_with_parameters(n_tests):
+def run_with_parameters(
+	n_tests,
+	test_c_authors=True, test_c_books=True,
+	test_r_authors=True, test_r_books=True,
+	test_u_authors=True, test_u_books=True,
+	test_d_authors=True, test_d_books=True):
+
 	time_results = []
 
 	print("Generating test data...")
@@ -21,83 +27,101 @@ def run_with_parameters(n_tests):
 
 	# Start tests
 	for ci, controller in enumerate(controllers):
-		time_results.append([])
+		time_results.append([None, None, None, None, None, None, None, None])
 
 		print("Testing", controller.name, "...")
 
-		# 1st test checks creating author records ( no references/relations  )
+		# Test creating author records (no references/relations)
 		start = timer()
 
 		for i in range(n_tests):
 			controller.create_author(i, cr_authors[i])
 
-		time_results[ci].append((timer() - start) / n_tests)
+		if test_c_authors:
+			time_results[ci][0] = (timer() - start) / n_tests
 
-		# 2nd test checks creating book records   ( yes references/relations )
+		# Test creating book records (yes references/relations)
 		start = timer()
 
 		for i in range(n_tests):
 			controller.create_book(i, cr_books[i])
 
-		time_results[ci].append((timer() - start) / n_tests)
+		if test_c_books:
+			time_results[ci][1] = (timer() - start) / n_tests
 
-		# 3rd test checks reading  author records ( no references/relations  )
-		start = timer()
+		# Test reading author records (no references/relations)
+		if test_r_authors:
+			start = timer()
 
-		for i in range(n_tests):
-			controller.read_author(i)
+			for i in range(n_tests):
+				controller.read_author(i)
 
-		time_results[ci].append((timer() - start) / n_tests)
+			time_results[ci][2] = (timer() - start) / n_tests
 
-		# 4th test checks reading  book records   ( yes references/relations )
-		start = timer()
+		# Test reading book records (yes references/relations)
+		if test_r_books:
+			start = timer()
 
-		for i in range(n_tests):
-			controller.read_book(i)
+			for i in range(n_tests):
+				controller.read_book(i)
 
-		time_results[ci].append((timer() - start) / n_tests)
+			time_results[ci][3] = (timer() - start) / n_tests
 
-		# 5th test checks updating author records ( no references/relations  )
-		start = timer()
+		# Test updating author records (no references/relations)
+		if test_u_authors:
+			start = timer()
 
-		for i in range(n_tests):
-			controller.update_author(i, up_authors[i])
+			for i in range(n_tests):
+				controller.update_author(i, up_authors[i])
 
-		time_results[ci].append((timer() - start) / n_tests)
+			time_results[ci][4] = (timer() - start) / n_tests
 
-		# 6th test checks updating book records   ( yes references/relations )
-		start = timer()
+		# Test updating book records (yes references/relations)
+		if test_u_books:
+			start = timer()
 
-		for i in range(n_tests):
-			controller.update_book(i, up_books[i])
+			for i in range(n_tests):
+				controller.update_book(i, up_books[i])
 
-		time_results[ci].append((timer() - start) / n_tests)
+			time_results[ci][5] = (timer() - start) / n_tests
 
-		# 7th test checks deleting author records ( no references/relations  )
+		# Test deleting author records (no references/relations)
 		start = timer()
 
 		for i in range(n_tests):
 			controller.delete_author(i)
 
-		time_results[ci].append((timer() - start) / n_tests)
+		if test_d_authors:
+			time_results[ci][6] = (timer() - start) / n_tests
 
-		# 8th test checks deleting book records   ( yes references/relations )
+		# Test deleting book records (yes references/relations)
 		start = timer()
 
 		for i in range(n_tests):
 			controller.delete_book(i)
 
-		time_results[ci].append((timer() - start) / n_tests)
+		if test_d_books:
+			time_results[ci][7] = (timer() - start) / n_tests
 
 		print(controller.name, "testing complete")
 
+	# Print out the results
 	print("All controller tests complete")
-	for i, _ in enumerate(controllers):
-		print(f"\n{controllers[i].name} results:")
-		print("Test #1\t| Test #2\t| Test #3\t| Test #4\t| Test #5\t| Test #6\t| Test #7\t| Test #8\t|")
-		for result in time_results[0]:
+	for ci, controller in enumerate(controllers):
+		print(f"\n{controller.name} results:")
+
+		for ti, result in enumerate(time_results[ci]):
+			if result is None:
+				continue
+
+			print((
+				"\tAuthor creation", "\tBook creation",
+				"\tAuthor reading", "\tBook reading",
+				"\tAuthor updating", "\tBook updating",
+				"\tAuthor deletion", "\tBook deletion")[ti], end=" test:\t")
+
 			result *= 1000
-			print(f"{result:.2f}ms", end="\t| ")
+			print(f"{result:.2f}ms")
 
 	print("")
 
@@ -105,4 +129,14 @@ def run_with_parameters(n_tests):
 # Read .env and run the tests
 if __name__ == "__main__":
 	config = dotenv_values(".env")
-	run_with_parameters(int(config["N_TESTS"]))
+	run_with_parameters(
+		int(config["N_TESTS"]),
+		test_c_authors=config["TEST_C_AUTHORS"] == "TRUE",
+		test_c_books=config["TEST_C_BOOKS"] == "TRUE",
+		test_r_authors=config["TEST_R_AUTHORS"] == "TRUE",
+		test_r_books=config["TEST_R_BOOKS"] == "TRUE",
+		test_u_authors=config["TEST_U_AUTHORS"] == "TRUE",
+		test_u_books=config["TEST_U_BOOKS"] == "TRUE",
+		test_d_authors=config["TEST_D_AUTHORS"] == "TRUE",
+		test_d_books=config["TEST_D_BOOKS"] == "TRUE",
+	)
