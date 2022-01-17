@@ -1,2 +1,4 @@
 __pycache__
 .env
+nanoDB.exe
+/db

@@ -8,8 +8,8 @@ from NanoController import NanoController
 from OracleController import OracleController
 
 controllers = [
+	OracleController("localhost:1521/ztbd", r"C:\instantclient_21_3"),
 	NanoController("http://127.0.0.1:3000"),
-	OracleController("localhost:1521/ztbd", r"C:\instantclient_21_3")
 ]
 
 
@@ -86,15 +86,6 @@ def run_with_parameters(
 
 			time_results[ci][5] = (timer() - start) / n_tests
 
-		# Test deleting author records (no references/relations)
-		start = timer()
-
-		for i in range(n_tests):
-			controller.delete_author(i)
-
-		if test_d_authors:
-			time_results[ci][6] = (timer() - start) / n_tests
-
 		# Test deleting book records (yes references/relations)
 		start = timer()
 
@@ -103,6 +94,15 @@ def run_with_parameters(
 
 		if test_d_books:
 			time_results[ci][7] = (timer() - start) / n_tests
+
+		# Test deleting author records (no references/relations)
+		start = timer()
+
+		for i in range(n_tests):
+			controller.delete_author(i)
+
+		if test_d_authors:
+			time_results[ci][6] = (timer() - start) / n_tests
 
 		print(controller.name, "testing complete")
 
