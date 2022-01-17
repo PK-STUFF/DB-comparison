@@ -18,7 +18,8 @@ class NanoController():
 
 	def create_book(self, identifier, data):
 		addr = self._create_address("book", identifier)
-		data["id_aut"] = "REF::author:{}".format(data["id_aut"])
+		_data = data.copy()
+		_data["id_aut"] = "REF::author:{}".format(data["id_aut"])
 		# Returns True if record was created, otherwise False
 		return requests.put(addr, data=json.dumps(data, default=str)).ok
 
