@@ -11,7 +11,7 @@ class OracleController():
 		self.conn = self.connect()
 
 	def connect(self):
-		conn = cx_Oracle.connect(user="SYS", 
+		conn = cx_Oracle.connect(user="SYS",
 								 password="adminztbd",
                                	 dsn=self.addr,
                                  mode=cx_Oracle.SYSDBA)
@@ -51,7 +51,7 @@ class OracleController():
 		return True
 
 	def read_book(self, identifier):
-		cmd = f"select * from book where id_book ={identifier}"
+		cmd = f"select a.*, b.* from book b inner join author a on b.id_aut = a.id_aut where b.id_book ={identifier}"
 
 		c = self.conn.cursor()
 		c.execute(cmd)
