@@ -21,7 +21,7 @@ class NanoController():
 		_data = data.copy()
 		_data["id_aut"] = "REF::author:{}".format(data["id_aut"])
 		# Returns True if record was created, otherwise False
-		return requests.put(addr, data=json.dumps(data, default=str)).ok
+		return requests.put(addr, data=json.dumps(_data, default=str)).ok
 
 	def read_author(self, identifier):
 		addr = self._create_address("author", identifier)
