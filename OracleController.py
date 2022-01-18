@@ -28,10 +28,7 @@ class OracleController():
 		c.execute(cmd, sql_params)
 		self.conn.commit()
 
-		if id_aut_wrap.getvalue():
-			return True
-		else:
-			return False
+		return True if id_aut_wrap.getvalue() else False
 
 	def create_book(self, identifier, data):
 		# Returns True if record was created, otherwise False
@@ -43,10 +40,7 @@ class OracleController():
 		c.execute(cmd, sql_params)
 		self.conn.commit()
 
-		if id_book_wrap.getvalue():
-			return True
-		else:
-			return False
+		return True if id_book_wrap.getvalue() else False
 
 	def read_author(self, identifier):
 		cmd = f"select * from author where id_aut ={identifier}"
@@ -74,10 +68,7 @@ class OracleController():
 		c.execute(cmd, sql_params)
 		self.conn.commit()
 
-		if id_aut_wrap.getvalue():
-			return True
-		else:
-			return False
+		return True if id_aut_wrap.getvalue() else False
 
 	def update_book(self, identifier, data):
 		# Returns True if record was updated, otherwise False
@@ -89,10 +80,7 @@ class OracleController():
 		c.execute(cmd, sql_params)
 		self.conn.commit()
 
-		if id_book_wrap.getvalue():
-			return True
-		else:
-			return False
+		return True if id_book_wrap.getvalue() else False
 
 	def delete_author(self, identifier):
 		# Returns True if record was deleted, otherwise False
@@ -104,10 +92,7 @@ class OracleController():
 		c.execute(cmd, sql_params)
 		self.conn.commit()
 	
-		if id_aut_wrap.getvalue():
-			return True
-		else:
-			return False
+		return True if id_aut_wrap.getvalue() else False
 
 	def delete_book(self, identifier):
 		# Returns True if record was deleted, otherwise False
@@ -119,7 +104,4 @@ class OracleController():
 		c.execute(cmd, sql_params)
 		self.conn.commit()
 
-		if id_book_wrap.getvalue():
-			return True
-		else:
-			return False
+		return True if id_book_wrap.getvalue() else False
